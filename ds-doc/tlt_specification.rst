@@ -1,3 +1,5 @@
+.. _tlt_specs:
+
 Transfer Learning Toolkit - Specification Files
 ===============================================
 Specification files define how formatted datasets are being converted to TFrecords for training, and properties or parameters to define how models are being trained or re-trained.
@@ -120,7 +122,7 @@ Sample training specification file :file:`/workspace/examples/ssd/specs/ssd_trai
 	validation_fold: 0
 	}
 
-* :code:`ssd_config`: properties for SSD backbone defining behaviour during training the pretrained model. 
+* :code:`ssd_config`: properties for detection backbone (i.e. ssd) defining behaviour during training the pretrained model. 
 
 	* If you want to try different pretrained models available on NGC, configure :code:`arch` and :code:`nlayers`
 
@@ -242,6 +244,187 @@ Retrain specification file
 	validation_fold: 0
 	}
 
+.. _tlt_specs_class:
 
 Train Classification models
 ---------------------------
+Compared to training detection models with TLT, TLT training of classification model is more straightforward in preparing 2 specification files, which are *training specification file* and *retrain specification file*.
+
+Training specification file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sample classification training specification file :file:`/workspace/examples/classification/specs/classification_spec.cfg`.
+
+::
+
+	model_config {
+	  arch: "resnet",
+	  n_layers: 18
+	  # Setting these parameters to true to match the template downloaded from NGC.
+	  use_batch_norm: true
+	  all_projections: true
+	  freeze_blocks: 0
+	  freeze_blocks: 1
+	  input_image_size: "3,224,224"
+	}
+	train_config {
+	  train_dataset_path: "/workspace/tlt-experiments/data/split/train"
+	  val_dataset_path: "/workspace/tlt-experiments/data/split/val"
+	  pretrained_model_path: "/workspace/tlt-experiments/classification/pretrained_resnet18/tlt_pretrained_classification_vresnet18/resnet_18.hdf5"
+	  optimizer: "sgd"
+	  batch_size_per_gpu: 64
+	  n_epochs: 80
+	  n_workers: 16
+
+	  # regularizer
+	  reg_config {
+	    type: "L2"
+	    scope: "Conv2D,Dense"
+	    weight_decay: 0.00005
+	  }
+
+	  # learning_rate
+	  lr_config {
+	    scheduler: "step"
+	    learning_rate: 0.006
+	    #soft_start: 0.056
+	    #annealing_points: "0.3, 0.6, 0.8"
+	    #annealing_divider: 10
+	    step_size: 10
+	    gamma: 0.1
+	  }
+	}
+	eval_config {
+	  eval_dataset_path: "/workspace/tlt-experiments/data/split/test"
+	  model_path: "/workspace/tlt-experiments/classification/output/weights/resnet_080.tlt"
+	  top_k: 3
+	  batch_size: 256
+	  n_workers: 8
+	}
+
+* :code:`model_config`: Configuration of behaviour of pretrained model.
+* :code:`train_config`: Configuration the parameters for TLT training (e.g. training datasets, hyperparameters, etc.)
+
+	* Structure of training dataset expected by TLT classification (Using this sample training dataset VOC2012 as an example)::
+
+		.
+		├── test
+		│   ├── aeroplane [134 entries exceeds filelimit, not opening dir]
+		│   ├── bicycle [111 entries exceeds filelimit, not opening dir]
+		│   ├── bird [153 entries exceeds filelimit, not opening dir]
+		│   ├── boat [102 entries exceeds filelimit, not opening dir]
+		│   ├── bottle [142 entries exceeds filelimit, not opening dir]
+		│   ├── bus [85 entries exceeds filelimit, not opening dir]
+		│   ├── car [233 entries exceeds filelimit, not opening dir]
+		│   ├── cat [216 entries exceeds filelimit, not opening dir]
+		│   ├── chair [224 entries exceeds filelimit, not opening dir]
+		│   ├── cow [61 entries exceeds filelimit, not opening dir]
+		│   ├── diningtable [108 entries exceeds filelimit, not opening dir]
+		│   ├── dog [258 entries exceeds filelimit, not opening dir]
+		│   ├── horse [97 entries exceeds filelimit, not opening dir]
+		│   ├── motorbike [106 entries exceeds filelimit, not opening dir]
+		│   ├── person [818 entries exceeds filelimit, not opening dir]
+		│   ├── pottedplant [106 entries exceeds filelimit, not opening dir]
+		│   ├── sheep [65 entries exceeds filelimit, not opening dir]
+		│   ├── sofa [102 entries exceeds filelimit, not opening dir]
+		│   ├── train [109 entries exceeds filelimit, not opening dir]
+		│   └── tvmonitor [115 entries exceeds filelimit, not opening dir]
+		├── train
+		│   ├── aeroplane [468 entries exceeds filelimit, not opening dir]
+		│   ├── bicycle [386 entries exceeds filelimit, not opening dir]
+		│   ├── bird [535 entries exceeds filelimit, not opening dir]
+		│   ├── boat [355 entries exceeds filelimit, not opening dir]
+		│   ├── bottle [494 entries exceeds filelimit, not opening dir]
+		│   ├── bus [294 entries exceeds filelimit, not opening dir]
+		│   ├── car [812 entries exceeds filelimit, not opening dir]
+		│   ├── cat [756 entries exceeds filelimit, not opening dir]
+		│   ├── chair [783 entries exceeds filelimit, not opening dir]
+		│   ├── cow [212 entries exceeds filelimit, not opening dir]
+		│   ├── diningtable [376 entries exceeds filelimit, not opening dir]
+		│   ├── dog [900 entries exceeds filelimit, not opening dir]
+		│   ├── horse [337 entries exceeds filelimit, not opening dir]
+		│   ├── motorbike [368 entries exceeds filelimit, not opening dir]
+		│   ├── person [2860 entries exceeds filelimit, not opening dir]
+		│   ├── pottedplant [368 entries exceeds filelimit, not opening dir]
+		│   ├── sheep [227 entries exceeds filelimit, not opening dir]
+		│   ├── sofa [354 entries exceeds filelimit, not opening dir]
+		│   ├── train [380 entries exceeds filelimit, not opening dir]
+		│   └── tvmonitor [402 entries exceeds filelimit, not opening dir]
+		└── val
+		    ├── aeroplane [68 entries exceeds filelimit, not opening dir]
+		    ├── bicycle [55 entries exceeds filelimit, not opening dir]
+		    ├── bird [77 entries exceeds filelimit, not opening dir]
+		    ├── boat [51 entries exceeds filelimit, not opening dir]
+		    ├── bottle [70 entries exceeds filelimit, not opening dir]
+		    ├── bus [42 entries exceeds filelimit, not opening dir]
+		    ├── car [116 entries exceeds filelimit, not opening dir]
+		    ├── cat [108 entries exceeds filelimit, not opening dir]
+		    ├── chair [112 entries exceeds filelimit, not opening dir]
+		    ├── cow [30 entries exceeds filelimit, not opening dir]
+		    ├── diningtable [54 entries exceeds filelimit, not opening dir]
+		    ├── dog [128 entries exceeds filelimit, not opening dir]
+		    ├── horse [48 entries exceeds filelimit, not opening dir]
+		    ├── motorbike [52 entries exceeds filelimit, not opening dir]
+		    ├── person [409 entries exceeds filelimit, not opening dir]
+		    ├── pottedplant [53 entries exceeds filelimit, not opening dir]
+		    ├── sheep [33 entries exceeds filelimit, not opening dir]
+		    ├── sofa [51 entries exceeds filelimit, not opening dir]
+		    ├── train [55 entries exceeds filelimit, not opening dir]
+		    └── tvmonitor [58 entries exceeds filelimit, not opening dir]
+
+	* In each folder, all images of each class are put into a folder where the folder's name represents the class.
+
+	* If you have your own dataset, format your dataset in a way that is expected by TLT classification training structure, and configure :code:`train_dataset_path` and :code:`val_dataset_path` to match your paths.
+
+
+* :code:`eval_config`: Configuration of how evaluation of TLT model takes place.
+
+
+Retrain specification file
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sample classification retrain specification file :file:`/workspace/examples/classification/specs/classification_retrain_spec.cfg`.
+
+::
+
+	model_config {
+	  arch: "resnet",
+	  n_layers: 18
+	  use_batch_norm: true
+	  all_projections: true
+	  input_image_size: "3,224,224"
+	}
+	train_config {
+	  train_dataset_path: "/workspace/tlt-experiments/data/split/train"
+	  val_dataset_path: "/workspace/tlt-experiments/data/split/val"
+	  pretrained_model_path: "/workspace/tlt-experiments/classification/output/resnet_pruned/resnet18_nopool_bn_pruned.tlt"
+	  optimizer: "sgd"
+	  batch_size_per_gpu: 64
+	  n_epochs: 80
+	  n_workers: 16
+
+	  # regularizer
+	  reg_config {
+	    type: "L2"
+	    scope: "Conv2D,Dense"
+	    weight_decay: 0.00005
+	  }
+
+	  # learning_rate
+	  lr_config {
+	    scheduler: "step"
+	    learning_rate: 0.006
+	    #soft_start: 0.056
+	    #annealing_points: "0.3, 0.6, 0.8"
+	    #annealing_divider: 10
+	    step_size: 10
+	    gamma: 0.1
+	  }
+	}
+	eval_config {
+	  eval_dataset_path: "/workspace/tlt-experiments/data/split/test"
+	  model_path: "/workspace/tlt-experiments/classification/output_retrain/weights/resnet_080.tlt"
+	  top_k: 3
+	  batch_size: 256
+	  n_workers: 8
+	}

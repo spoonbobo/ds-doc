@@ -26,7 +26,7 @@ DeepStream container on NGC:
 	4. Create DeepStream container::
 
 		xhost+
-		sudo docker run --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:1 -w /opt/nvidia/deepstream/deepstream-5.1 nvcr.io/nvidia/deepstream:5.1-21.02-triton
+		sudo docker run --gpus all -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:1 -w /opt/nvidia/deepstream/deepstream-5.1 nvcr.io/nvidia/deepstream:5.1-21.02-triton
 
 Optional: Camera, WiFi adapter
 

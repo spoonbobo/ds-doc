@@ -1,3 +1,5 @@
+.. _ds_config:
+
 DeepStream - App Configurations
 ===============================
 
@@ -27,7 +29,7 @@ DeepStream - App Configurations
      - Refer to :code:`[test]` group in app config. Set whether to loop the video.
 
 
-These application configurations will be put into 1 text file, in generae case will be named similarly as :file:`deepstream_app_source.txt`. The sample config file we will dicuss is called :file:`source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt`.
+These application configurations will be put into 1 text file, in generae case will be named similarly as :file:`deepstream_app_source.txt`. The sample config file we will dicuss is :file:`source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt` in */opt/nvidia/deepstream/deepstream-5.1/samples/configs/deepstream-app*
 
 source group
 ------------

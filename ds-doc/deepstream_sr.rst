@@ -31,8 +31,7 @@ To start with, let's prepare a RTSP stream using DeepStream. If you don't have a
 
 Configure Kafka server (:file:`kafka_2.13-2.8.0/config/server.properties`):: 
 
-	listeners=PLAINTEXT://127.0.0.1:29092,
-	PLAINTEXT_HOST://<your-host-ip>:9092
+	listeners=PLAINTEXT://127.0.0.1:29092, PLAINTEXT_HOST://<your-host-ip>:9092
 	advertised.listeners=PLAINTEXT://127.0.0.1:29092, PLAINTEXT_HOST://<your-host-ip>:9092
 	listener.security.protocol.map=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
 	zookeeper.connect=<your-host-ip>:2181

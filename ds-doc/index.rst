@@ -7,9 +7,8 @@ DeepStream End-to-end User Guide
 ================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   description
    deepstream
    deepstream_config
    deepstream_config_infer
@@ -18,12 +17,20 @@ DeepStream End-to-end User Guide
    deepstream_iot
    deepstream_demo
    deepstream_issue
+
    tlt
    tlt_specification
-   tlt_newbie
+   tlt_street
+   tlt_covid
+   tlt_class
+
    custom_infer
-
-
+   custom_infer_config
+   custom_infer_bboxparse
+   custom_infer_ssd
+   custom_infer_yolov4
+   custom_infer_centerface
+   custom_infer_inception
 
 .. Indices and tables
    ==================
@@ -31,3 +38,23 @@ DeepStream End-to-end User Guide
    * :ref:`genindex`
    * :ref:`modindex`
    * :ref:`search`
+
+.. Y3E4MzY5aWc0dG01Y2hidm9sNnFkam9vajI6NDAwOWRiNWEtYzMxZi00YWU0LWExODEtZDAyMWNhZmIzZTFk
+
+.. sdk: 
+
+Guide Description
+-----------------
+
+Guide for end-to-end DeepStream development from custom inference engines to custom DeepStream deployment.
+
+CLI commands: Mostly bash
+
+Author
+------
+
+Season POON
+
+Position: machine learning intern @ NVIDIA
+
+Email: spoon@nvidia.com
