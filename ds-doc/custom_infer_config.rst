@@ -533,6 +533,8 @@ Major parameters of Triton model config
 
 * platform and/or backend properties
 
+	See `Triton Inference Server Backend <https://github.com/triton-inference-server/backend/blob/main/README.md#backends>`_ for more details.
+
 * :code:`max_batch_size`
 
 * :code:`input`
