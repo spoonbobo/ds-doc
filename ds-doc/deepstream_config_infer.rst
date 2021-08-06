@@ -20,6 +20,8 @@ offsets
 :code:`offsets` is an array of mean values of color components to be subtracted from each pixel for pixel normalization. For example, a pixel have three color components *r*, *g*, *b*. With :code:`net-scale-factor` set to 1, and offsets set to *x;y;z*, the normalised pixel values become *r-x*, *g-y* and *b-z*.
 
 
+.. _filter_options:
+
 scaling filter
 --------------
 :code:`scaling-filter` defines the interpolation method for image scaling. Value for this filter can be found at :dfn:`<deepstream-root>/sources/includes/nvbufsurftransform.h`.

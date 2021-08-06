@@ -28,6 +28,7 @@ DeepStream End-to-end User Guide
    custom_infer_config
    custom_infer_bboxparse
    custom_infer_ssd
+   custom_infer_ssd_triton
    custom_infer_yolov4
    custom_infer_centerface
    custom_infer_inception

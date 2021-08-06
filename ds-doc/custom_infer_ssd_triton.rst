@@ -1,17 +1,15 @@
-Custom Model - SSD
-==================
+Custom Model - SSD (Triton)
+===========================
 
-This sample deployment of Yolov4 detection model describes how can we export SSD detection model with pretrained Resnet50 as backbone to ONNX model, and then convert it to TRT inference engine and deploy the engine on DeepStream. See `GitHub repository <https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Detection/SSD>`_ for more details of this deployment of SSD detection model on Nvidia AGX Xavier.
+This sample deployment of Yolov4 detection model describes how can we export SSD detection model with pretrained Resnet50 as backbone to ONNX model, and deploy the engine in Triton Inference Server on DeepStream. See `GitHub repository <https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Detection/SSD>`_ for more details of this deployment of SSD detection model on Nvidia AGX Xavier.
 
 Prerequisites
 -------------
 
 * Nvidia docker
 * PyTorch NGC container
-* TensorRT >= 8.0.x
 * Nvidia AGX Xavier
 * GPU-based architecture
-* `onnx2trt package <https://github.com/onnx/onnx-tensorrt>`_
 
 1. Clone the github repo
 ------------------------
@@ -120,38 +118,3 @@ For example,
 .. code-block:: bash
 
 	python3 /outputs/torch2onnx.py 64
-
-
-7. Convert ONNX model to TRT engine
------------------------------------
-
-Basically, you have two ways of accessing it
-
-7.1 Use onnx2trt
-~~~~~~~~~~~~~~~~
-
-In this step, we need onnx2trt package. Exit PyTorch container, in TRT environment, run::
-
-	git submodule update --init --recursive
-
-	apt-get install libprotobuf-dev protobuf-compiler
-
-	git submodule update --init --recursive
-
-7.2 Use trtexec
-~~~~~~~~~~~~~~~
-
-
-8. Prepare labels file
-----------------------
-
-parse-bbox-func-name=NvDsInferParseCustomSSD
-custom-lib-path=nvdsinfer_custom_impl_ssd/libnvdsinfer_custom_impl_ssd.so
-
-
-9. Prepare app config file
---------------------------
-
-
-10. Prepare gie config file
----------------------------

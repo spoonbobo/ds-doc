@@ -3,6 +3,9 @@ Custom Model - Triton Inference Server Configurations
 
 See `nvinferserver <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html>`_ for Triton configurations in DeepStream.
 
+App configurations
+------------------
+
 Similar to :ref:`ds_config`, we will need a DeepStream app config to run DeepStream. For example, :file:`source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt` in */opt/nvidia/deepstream/deepstream-5.1/samples/configs/deepstream-app-trtis*::
 
 	################################################################################
@@ -210,8 +213,10 @@ Similar to :ref:`ds_config`, we will need a DeepStream app config to run DeepStr
 As you might spot, the content of this file is similar to :file:`source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt` in *../deepstream-app*. The difference is that *nvinferserver* plugin will be used instead of *nvinfer* with the property :code:`plugin-type` equals to 1 under :code:`primary-gie` and :code:`secondary-gieX`. A :code:`config-file` is needed for each gie. We will inspect the gie config.
 
 
-Gie configuration files
------------------------
+Gie configurations
+------------------
+Sample gie config file :file:`config_infer_plan_engine_primary.txt` located in */opt/nvidia/deepstream/deepstream-5.1/samples/configs/deepstream-app-trtis*
+
 ::
 
 	infer_config {
@@ -276,21 +281,290 @@ Gie configuration files
 Inference config
 ~~~~~~~~~~~~~~~~
 
+Refer to :code:`infer_config` group in gie config.
+
+* :code:`backend`: Include 3 parameters :code:`inputs`, :code:`outputs`, and :code:`trt_is`. See `BackendParams <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id10>`_ for more details
+	
+	* :code:`inputs`: 
+
+		* :code:`name`: Input tensor name
+
+	* :code:`outputs`:
+
+		* :code:`name`: Output tensor name
+
+	* :code:`model_name`: The name of model under model repo. See :ref:`model_repo_structure` for more details.
+
+	* :code:`model_repo`:
+
+		* See `TritonModelRepo <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id15>`_ more details
+
+* :code:`preprocess`: 
+	
+	* :code:`network_format`: media format
+
+	* :code:`tensor_order`: Select from :code:`TENSOR_ORDER_NONE`, :code:`TENSOR_ORDER_LINEAR`, and :code:`TENSOR_ORDER_NHWC`. 
+
+	* :code:`tensor_name`: Refer to :code:`inputs` under :code:`infer_config`
+
+	* :code:`maintain_aspect_ratio`: set 1 to maintain aspect ratio while performing scaling.
+
+	* :code:`frame_scaling_hw`: Compute hardware to use for scaling frames or cropping the objects to network resolution
+
+	* :code:`frame_scaling_filter`: Refer to :ref:`deepstream_infer_config` to see options.
+
+	* :code:`normalize`: Refer to :ref:`deepstream_infer_config` for more details.
+
+	See `PreProcessParams <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id16>`_ for more details
+
+* :code:`postprocess`:
+
+	* :code:`detection`:
+
+		* :code:`group_rectangle`: clustering bounding boxes.
+
+		See `DetectionParams <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id19>`_ 
+
 See `Inference configurations definition <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id10>`_ to see full details of infer config group.
 
 
 Input control config
 ~~~~~~~~~~~~~~~~~~~~
 
+* :code:`process_mode`: By default, select :code:`PROCESS_MODE_FULL_FRAME` for PGIE, or :code:`PROCESS_MODE_CLIP_OBJECTS` for SGIE.
+
+
 See `Input control definition <https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_plugin_gst-nvinferserver.html#id3>`_ to see full details of input control config.
 
 
 .. _model_repo_structure:
 
-Triton model config
-~~~~~~~~~~~~~~~~~~~
+Triton model repo and config
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-See `Model configurations <https://github.com/triton-inference-server/server/blob/r20.12/docs/model_configuration.md>`_ Triton model config.
+Triton model repository
+***********************
+
+Sample :file:`trtis_model_repo` located in */opt/nvidia/deepstream/deepstream-5.1/samples/*::
+
+	.
+	|-- Primary_Detector
+	|   |-- 1
+	|   |   `-- resnet10.caffemodel_b30_gpu0_int8.engine
+	|   `-- config.pbtxt
+	|-- Secondary_CarColor
+	|   |-- 1
+	|   |   `-- resnet18.caffemodel_b16_gpu0_int8.engine
+	|   `-- config.pbtxt
+	|-- Secondary_CarMake
+	|   |-- 1
+	|   |   `-- resnet18.caffemodel_b16_gpu0_int8.engine
+	|   `-- config.pbtxt
+	|-- Secondary_VehicleTypes
+	|   |-- 1
+	|   |   `-- resnet18.caffemodel_b16_gpu0_int8.engine
+	|   `-- config.pbtxt
+	|-- Segmentation_Industrial
+	|   |-- 1
+	|   |   `-- unet_output_graph.uff_b1_gpu0_fp32.engine
+	|   `-- config.pbtxt
+	|-- Segmentation_Semantic
+	|   |-- 1
+	|   |   `-- unetres18_v4_pruned0.65_800_data.uff_b1_gpu0_fp32.engine
+	|   `-- config.pbtxt
+	|-- densenet_onnx
+	|   |-- 1
+	|   |   `-- model.onnx
+	|   |-- config.pbtxt
+	|   `-- densenet_labels.txt
+	|-- inception_graphdef
+	|   |-- 1
+	|   |   `-- model.graphdef
+	|   |-- config.pbtxt
+	|   `-- inception_labels.txt
+	|-- mobilenet_v1
+	|   |-- 1
+	|   |   `-- model.graphdef
+	|   |-- config.pbtxt
+	|   `-- labels.txt
+	|-- ssd_inception_v2_coco_2018_01_28
+	|   |-- 1
+	|   |   `-- model.graphdef
+	|   |-- config.pbtxt
+	|   `-- labels.txt
+	`-- ssd_mobilenet_v1_coco_2018_01_28
+	    |-- 1
+	    |   `-- frozen_inference_graph.pb
+	    |-- config.pbtxt
+	    `-- labels.txt
+
+Triton models are stored in model repositories which follows the follwing structure::
+
+	<model-repository-path>/
+	    <model-name>/
+	      [config.pbtxt]
+	      [<output-labels-file> ...]
+	      <version>/
+	        <model-definition-file>
+	      <version>/
+	        <model-definition-file>
+	      ...
+	    <model-name>/
+	      [config.pbtxt]
+	      [<output-labels-file> ...]
+	      <version>/
+	        <model-definition-file>
+	      <version>/
+	        <model-definition-file>
+	      ...
+	    ...
+
+**Minimal model repository for models:**
+
+*TensorRT model*
+::
+
+	<model-repository-path>/
+	  <model-name>/
+	    config.pbtxt
+	    1/
+	      model.plan
+
+*ONNX model*
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.onnx
+
+*TorchScript model*
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.pt
+
+
+*Tensorflow model*
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.graphdef
+
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.savedmodel/
+             <saved-model files>
+
+
+*Python model*
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.py
+
+
+*DALI model* 
+::
+
+	<model-repository-path>/
+      <model-name>/
+        config.pbtxt
+        1/
+          model.dali
 
 
 See `Model repository <https://github.com/triton-inference-server/server/blob/r20.12/docs/model_repository.md>`_ Model repository for Triton models
+
+Triton model configuration
+**************************
+Sample model config file :file:`config.pbtxt` located in */opt/nvidia/deepstream/deepstream-5.1/samples/trtis_model_repo/Primary_Detector*.
+
+::
+
+	name: "Primary_Detector"
+	platform: "tensorrt_plan"
+	max_batch_size: 30
+	default_model_filename: "resnet10.caffemodel_b30_gpu0_int8.engine"
+	input [
+	  {
+	    name: "input_1"
+	    data_type: TYPE_FP32
+	    format: FORMAT_NCHW
+	    dims: [ 3, 368, 640 ]
+	  }
+	]
+	output [
+	  {
+	    name: "conv2d_bbox"
+	    data_type: TYPE_FP32
+	    dims: [ 16, 23, 40 ]
+	  },
+
+	  {
+	    name: "conv2d_cov/Sigmoid"
+	    data_type: TYPE_FP32
+	    dims: [ 4, 23, 40 ]
+	  }
+	]
+	instance_group [
+	  {
+	    kind: KIND_GPU
+	    count: 1
+	    gpus: 0
+	  }
+	]
+
+Major parameters of Triton model config
+
+* platform and/or backend properties
+
+* :code:`max_batch_size`
+
+* :code:`input`
+
+* :code:`output`
+
+Optional parameters of Triton Model config
+
+* :code:`version_policy`
+	
+	::
+
+		version_policy: { all { }}
+
+* :code:`instance_group`
+
+	::
+
+		instance_group [
+	  {
+	    kind: KIND_GPU
+	    count: 1
+	    gpus: 0
+	  }
+
+* :code:`dynamic_batching`
+
+	::
+
+		  dynamic_batching {
+		    preferred_batch_size: [ 4, 8 ]
+		    max_queue_delay_microseconds: 100
+		  }
+
+See `Model configurations <https://github.com/triton-inference-server/server/blob/r20.12/docs/model_configuration.md>`_ Triton model config.

@@ -1,7 +1,7 @@
-Custom Model - Inception (Triton)
-=================================
+Custom Model - FasterRCNN (Triton)
+==================================
 
-Sample deployment of Inception network in Triton Inference Server on AGX Xavier. For more details, see `Centerface repo <https://github.com/NVIDIA-AI-IOT/deepstream_triton_model_deploy/tree/master/centerface>`_ for more details.
+Sample deployment of Inception network in Triton Inference Server on AGX Xavier. For more details, see `FasterRCNN repo <https://github.com/NVIDIA-AI-IOT/deepstream_triton_model_deploy/tree/master/faster_rcnn_inception_v2>`_ for more details.
 
 Prerequisites
 -------------
