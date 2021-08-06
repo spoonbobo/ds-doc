@@ -1,3 +1,0 @@
-DeepStream - IoT Edge
-=====================
-
