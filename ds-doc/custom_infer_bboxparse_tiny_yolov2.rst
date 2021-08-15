@@ -274,9 +274,8 @@ On the other hand, if we want to find :code:`tx` of first bounding box in *next 
 
 .. math::
 
-	\text{xy_offset} = y_{i} \times \text{grid height} + x_i
+	\text{xy_offset} = y_i \times grid\ height\ + x_i
 	
-
 Intuitively, we can apply this offset to loop through all grid cells in a XY plane.
 
 So we deduce the logic to iterate over flattened array: **loop through bounding box parameters in every grid cell row by row.**
