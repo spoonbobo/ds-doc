@@ -274,7 +274,7 @@ On the other hand, if we want to find :code:`tx` of first bounding box in *next 
 
 .. math::
 
-	\text{xy_offset} = y_{i} \times \text{grid height} + x_i = 0 \times 13 + 1 \end
+	\text{xy_offset} = y_{i} \times \text{grid height} + x_i = 0 \times 13 + 1 \ 
 
 Intuitively, we can apply this offset to loop through all grid cells in a XY plane.
 
