@@ -27,6 +27,8 @@ DeepStream End-to-end User Guide
    custom_infer
    custom_infer_config
    custom_infer_bboxparse
+   custom_infer_bboxparse_yolov2_coco
+   custom_infer_bboxparse_tiny_yolov2
    custom_infer_bboxparse_dsinfer
    custom_infer_bboxparse_ssd
    custom_infer_bboxparse_frcnn
