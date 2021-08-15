@@ -272,10 +272,6 @@ For example, suppose we want to find :code:`tx` of first bounding box in grid ce
 
 On the other hand, if we want to find :code:`tx` of first bounding box in *next grid cell (x0, y0 + 1)* in flattened array by index (0-based), we will apply :code:`xy_offset`, that is
 
-.. math::
-
-	\text{xy_offset} = y_i \times \text{grid height} + x_{i}
-
 Intuitively, we can apply this offset to loop through all grid cells in a XY plane.
 
 So we deduce the logic to iterate over flattened array: **loop through bounding box parameters in every grid cell row by row.**
