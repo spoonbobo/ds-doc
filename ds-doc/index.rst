@@ -27,8 +27,10 @@ DeepStream End-to-end User Guide
    custom_infer
    custom_infer_config
    custom_infer_bboxparse
+   custom_infer_bboxparse_retina
    custom_infer_bboxparse_yolov2_coco
    custom_infer_bboxparse_tiny_yolov2
+   custom_infer_bboxparse_efficientdet
    custom_infer_bboxparse_dsinfer
    custom_infer_bboxparse_ssd
    custom_infer_bboxparse_frcnn
@@ -53,9 +55,7 @@ DeepStream End-to-end User Guide
 Guide Description
 -----------------
 
-Guide for end-to-end DeepStream development from custom inference engines to custom DeepStream deployment.
-
-CLI commands: Mostly bash
+End-to-end DeepStream development from custom inference engines to custom DeepStream deployment.
 
 Author
 ------
